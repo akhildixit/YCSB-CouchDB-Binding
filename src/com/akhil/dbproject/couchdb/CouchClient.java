@@ -29,13 +29,18 @@ public class CouchClient extends DB {
 	@Override
 	public void init() throws DBException {
 		CouchDbProperties properties = new CouchDbProperties();
+		//CouchDB host IP
 		properties.setHost("127.0.0.1");
+		//CouchDB port - default is 5984
 		properties.setPort(5984);
+		//CouchDB database name
 		properties.setDbName("testdb");
+		//Also set username and password here if required
 		properties.setCreateDbIfNotExist(true);
 		properties.setProtocol("http");
 		Properties props = getProperties();
 		batchInsertList = new ArrayList<JsonObject>();
+		//batchsize is used in case of insertions
 		batchSize = Integer.parseInt(props.getProperty("batchsize", "10000"));
 		dbClient = new CouchDbClient(properties);
 		super.init();
@@ -43,7 +48,6 @@ public class CouchClient extends DB {
 
 	@Override
 	public Status read(String table, String key, Set<String> fields, HashMap<String, ByteIterator> result) {
-		// TODO Auto-generated method stub
 		JsonObject found = dbClient.find(JsonObject.class, key, "stale=ok");
 		if (null == found)
 			return Status.NOT_FOUND;
